@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,8 @@ import javax.persistence.EntityNotFoundException;
 
 import com.iftm.demo.entities.Product;
 import com.iftm.demo.repositories.ProductRepository;
+import com.iftm.demo.services.exceptions.DatabaseException;
+
 import java.util.stream.Collectors;
 import com.iftm.demo.dto.ProductDTO;
 import com.iftm.demo.services.exceptions.ResourceNotFoundException;
@@ -55,6 +59,16 @@ public class ProductService {
 			return new ProductDTO(entity);
 		} catch(EntityNotFoundException e) {
 			throw new ResourceNotFoundException(id);
+		}
+	}
+	
+	public void delete(Long id) {
+		try {
+			repository.deleteById(id);
+		} catch(EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch(DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage()); 
 		}
 	}
 	
