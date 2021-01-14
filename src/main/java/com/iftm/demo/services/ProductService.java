@@ -18,8 +18,9 @@ import javax.persistence.EntityNotFoundException;
 import com.iftm.demo.entities.Product;
 import com.iftm.demo.repositories.ProductRepository;
 import com.iftm.demo.services.exceptions.DatabaseException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.stream.Collectors;
 import com.iftm.demo.dto.ProductDTO;
 import com.iftm.demo.services.exceptions.ResourceNotFoundException;
 
@@ -32,9 +33,9 @@ public class ProductService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	public List<ProductDTO> findAll() {
-		List<Product> list =  repository.findAll();
-		return list.stream().map(e -> new ProductDTO(e)).collect(Collectors.toList());		
+	public Page<ProductDTO> findAllPaged(Pageable pageable) {
+		Page<Product> list =  repository.findAll(pageable);
+		return list.map(e -> new ProductDTO(e));	
 	}
 	public ProductDTO findById(Long id) {
 		Optional<Product> obj = repository.findById(id);

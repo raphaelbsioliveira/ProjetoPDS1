@@ -9,6 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import java.time.Instant;
+
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 
 import javax.persistence.ManyToMany;
@@ -25,12 +29,35 @@ public class Category implements Serializable {
 	
 	@ManyToMany(mappedBy = "categories")
 	private Set<Product> products = new HashSet<>();
+	
+	private Instant createdAt;
+	private Instant updatedAt;
 
 	public Category() {
 	}
 	
 	public Set<Product> getProducts() {
 		return products;
+	}
+	
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public Instant getUpdatedAt() {
+		return updatedAt;
+	}
+
+	@PreUpdate
+	public void preUpdate() {
+		updatedAt = Instant.now();
+	}
+
+	@PrePersist
+	public void prePersist() {
+		Instant now = Instant.now();
+		updatedAt = now;
+		createdAt = now;
 	}
 
 	public Category(Long id, String name) {
