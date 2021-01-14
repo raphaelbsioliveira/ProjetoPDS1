@@ -4,11 +4,13 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import com.iftm.demo.services.validation.UserInsertValid;
 
 import org.hibernate.validator.constraints.Length;
 
 import com.iftm.demo.entities.User;
 
+@UserInsertValid
 public class UserInsertDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
